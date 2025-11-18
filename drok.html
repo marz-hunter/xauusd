@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Bounty Program Dorking Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .info-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 5px;
+        }
+
+        .info-box h3 {
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .search-section {
+            margin-bottom: 30px;
+        }
+
+        .search-engines {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-engine-btn {
+            padding: 12px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .search-engine-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .search-engine-btn.active {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            border-color: #667eea;
+        }
+
+        .search-now-btn {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .search-now-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .search-now-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .search-now-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .dork-section {
+            margin-top: 30px;
+        }
+
+        .instruction-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            color: #92400e;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .dork-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-dork-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 10px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .search-dork-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .add-dork-btn {
+            padding: 10px 20px;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .add-dork-btn:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .dork-actions {
+            position: absolute;
+            right: 120px;
+            display: flex;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .dork-item:hover .dork-actions {
+            opacity: 1;
+        }
+
+        .dork-action-btn {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .dork-action-btn.edit {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .dork-action-btn.edit:hover {
+            background: #2563eb;
+        }
+
+        .dork-action-btn.delete {
+            background: #ef4444;
+            color: white;
+        }
+
+        .dork-action-btn.delete:hover {
+            background: #dc2626;
+        }
+
+        .dork-item.custom {
+            border-right: 4px solid #10b981;
+        }
+
+        .dork-item.custom .dork-text::before {
+            content: '★ ';
+            color: #10b981;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn.primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .modal-btn.primary:hover {
+            background: #5568d3;
+        }
+
+        .modal-btn.secondary {
+            background: #e5e7eb;
+            color: #333;
+        }
+
+        .modal-btn.secondary:hover {
+            background: #d1d5db;
+        }
+
+        .dork-list {
+            max-height: 500px;
+            overflow-y: auto;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 15px;
+            background: #f9fafb;
+        }
+
+        .dork-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 5px;
+            background: white;
+            border-radius: 5px;
+            transition: all 0.2s ease;
+            position: relative;
+            cursor: pointer;
+            border: 2px solid transparent;
+            user-select: none;
+        }
+
+        .dork-item:hover {
+            background: #f0f4ff;
+            border-color: #e0e7ff;
+        }
+
+        .dork-item:active {
+            transform: scale(0.98);
+        }
+
+        .dork-item.used {
+            background: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding-left: 11px;
+        }
+
+        .dork-item.used::after {
+            content: '✓ Searched';
+            position: absolute;
+            right: 10px;
+            color: #10b981;
+            font-weight: bold;
+            font-size: 13px;
+            background: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .dork-item .dork-text {
+            flex: 1;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            padding-right: 110px;
+        }
+
+        .stats {
+            text-align: center;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f0f4ff;
+            border-radius: 8px;
+            color: #667eea;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .exclusion-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff7ed;
+            border-left: 4px solid #f59e0b;
+            border-radius: 5px;
+        }
+
+        .exclusion-section h3 {
+            color: #f59e0b;
+            margin-bottom: 10px;
+        }
+
+        .engine-indicator {
+            background: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #667eea;
+            font-weight: 600;
+            border: 2px solid #e0e7ff;
+        }
+
+        .engine-indicator span {
+            color: #5b21b6;
+        }
+
+        .exclusion-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .exclusion-form label {
+            color: #92400e;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .exclusion-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px;
+            border: 2px solid #fbbf24;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            resize: vertical;
+            background: #fffbeb;
+            color: #92400e;
+        }
+
+        .exclusion-textarea:focus {
+            outline: none;
+            border-color: #f59e0b;
+            background: white;
+        }
+
+        .exclusion-help {
+            font-size: 12px;
+            color: #78350f;
+            font-style: italic;
+        }
+
+        .exclusion-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .exclusion-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .exclusion-btn.save {
+            background: #10b981;
+            color: white;
+        }
+
+        .exclusion-btn.save:hover {
+            background: #059669;
+        }
+
+        .exclusion-btn.reset {
+            background: #ef4444;
+            color: white;
+        }
+
+        .exclusion-btn.reset:hover {
+            background: #dc2626;
+        }
+
+        .exclusion-btn.default {
+            background: #667eea;
+            color: white;
+        }
+
+        .exclusion-btn.default:hover {
+            background: #5568d3;
+        }
+
+        .exclusion-preview {
+            margin-top: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            font-size: 12px;
+            color: #78350f;
+        }
+
+        .exclusion-preview strong {
+            color: #92400e;
+        }
+
+        .exclusion-preview code {
+            display: block;
+            margin-top: 5px;
+            padding: 8px;
+            background: #fef3c7;
+            border-radius: 4px;
+            font-size: 11px;
+            word-break: break-all;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        .char-count {
+            font-size: 11px;
+            color: #78350f;
+            margin-top: 5px;
+        }
+
+        .char-count.warning {
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .warning {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            color: #991b1b;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #5568d3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Bug Bounty Program Dorking Tool</h1>
+        <p class="subtitle">Find bug bounty programs hosted on their own sites (excluding third-party platforms)</p>
+
+        <div class="info-box">
+            <h3>ℹ️ Information</h3>
+            <ul>
+                <li><strong>Time Filter:</strong> Results from the last 1 month only</li>
+                <li><strong>Focus:</strong> Programs offering rewards/bounties (monetary, swag, hall of fame)</li>
+                <li><strong>Exclusions:</strong> Third-party bug bounty platforms and blog sites are automatically excluded</li>
+                <li><strong>Target:</strong> Programs hosted on their own websites/domains</li>
+            </ul>
+        </div>
+
+        <div class="search-section">
+            <h2 style="margin-bottom: 15px; color: #333;">🔍 Select Search Engine</h2>
+            <div class="search-engines" id="searchEngines"></div>
+        </div>
+
+        <div class="dork-section">
+            <h2 style="margin-bottom: 15px; color: #333;">📋 Click Dork to Search</h2>
+            <div class="instruction-box">
+                💡 <strong>How to use:</strong> Select a search engine above, then click any dork below to instantly search. Clicked dorks will be marked as "Searched". Custom dorks are marked with ★.
+            </div>
+            <div class="dork-controls">
+                <input
+                    type="text"
+                    id="searchDorkInput"
+                    class="search-dork-input"
+                    placeholder="🔍 Search dorks..."
+                    onkeyup="filterDorks()">
+                <button class="add-dork-btn" onclick="openAddDorkModal()">
+                    <span>➕</span>
+                    <span>Add Dork</span>
+                </button>
+            </div>
+            <div class="dork-list" id="dorkList"></div>
+            <div class="stats" id="stats"></div>
+        </div>
+
+        <!-- Modal for Add/Edit Dork -->
+        <div class="modal" id="dorkModal">
+            <div class="modal-content">
+                <div class="modal-header" id="modalHeader">Add New Dork</div>
+                <input
+                    type="text"
+                    id="modalDorkQuery"
+                    class="modal-input"
+                    placeholder="Enter dork query (e.g., inurl:/bug-bounty)">
+                <div class="modal-buttons">
+                    <button class="modal-btn secondary" onclick="closeDorkModal()">Cancel</button>
+                    <button class="modal-btn primary" id="modalSaveBtn" onclick="saveDork()">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="exclusion-section">
+            <h3>🚫 Exclusion Settings</h3>
+            <div class="engine-indicator" id="engineIndicator">
+                Select a search engine above to configure exclusions
+            </div>
+            <div class="exclusion-form">
+                <label for="exclusionInput">
+                    Excluded Domains (one per line, will be formatted as "-domain.com"):
+                </label>
+                <textarea
+                    id="exclusionInput"
+                    class="exclusion-textarea"
+                    placeholder="hackerone.com&#10;bugcrowd.com&#10;linkedin.com&#10;medium.com&#10;..."></textarea>
+                <div class="exclusion-help">
+                    💡 Each search engine can have different exclusions. Your settings are saved automatically per search engine.
+                </div>
+                <div class="exclusion-buttons">
+                    <button class="exclusion-btn save" onclick="saveExclusions()">💾 Save Exclusions</button>
+                    <button class="exclusion-btn default" onclick="loadDefaultExclusions()">🔄 Load Defaults</button>
+                    <button class="exclusion-btn reset" onclick="clearExclusions()">🗑️ Clear All</button>
+                </div>
+                <div class="exclusion-preview" id="exclusionPreview"></div>
+            </div>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ Note:</strong> This tool is for legitimate bug bounty hunting and security research purposes only. Always follow responsible disclosure practices and respect program rules.
+        </div>
+    </div>
+
+    <script>
+        // Default exclusions (used as starting point)
+        const defaultExclusions = [
+            'hackerone.com',
+            'bugcrowd.com',
+            'immunefi.com',
+            'yeswehack.com',
+            'synack.com',
+            'intigriti.com',
+            'openbugbounty.org',
+            'huntr.dev',
+            'cobalt.io',
+            'x.com',
+            'linkedin.com',
+            'medium.com',
+            'reddit.com',
+            'github.com',
+            'twitter.com',
+            'facebook.com',
+            'youtube.com',
+            'wikipedia.org',
+            'stackoverflow.com',
+            'quora.com',
+            'gitlab.com',
+            'bitbucket.org',
+            'indeed.com',
+            'glassdoor.com'
+        ];
+
+        // Default dorks list (focused on reward/bounty programs)
+        const defaultDorks = [
+            { query: 'inurl:/bug-bounty', reward: true },
+            { query: 'inurl:/bugbounty', reward: true },
+            { query: 'inurl:/security "reward"', reward: true },
+            { query: 'inurl:/responsible-disclosure/ reward', reward: true },
+            { query: 'inurl:/responsible-disclosure/ bounty', reward: true },
+            { query: 'inurl:/responsible-disclosure/ swag', reward: true },
+            { query: 'inurl:"responsible disclosure" hoodie', reward: true },
+            { query: 'responsible disclosure swag', reward: true },
+            { query: 'responsible disclosure hall of fame', reward: true },
+            { query: 'inurl:responsible disclosure $50', reward: true },
+            { query: 'white hat program', reward: false },
+            { query: '"powered by bugcrowd" -site:bugcrowd.com', reward: false },
+            { query: '"submit vulnerability report"', reward: false },
+            { query: 'inurl:\'vulnerability-disclosure-policy\' reward', reward: true },
+            { query: 'intext:Vulnerability Disclosure site:nl', reward: false },
+            { query: 'intext:Vulnerability Disclosure site:eu', reward: false },
+            { query: 'site:*.*.nl intext:security report reward', reward: true },
+            { query: 'site:*.*.nl intext:responsible disclosure reward', reward: true },
+            { query: '"security vulnerability" "report"', reward: false },
+            { query: 'inurl:/security ext:txt "contact"', reward: false },
+            { query: 'intext:responsible disclosure bounty', reward: true },
+            { query: 'inurl:/.well-known/security ext:txt -hackerone -bugcrowd -synack -openbugbounty', reward: false },
+            { query: 'inurl:reporting-security-issues', reward: false },
+            { query: 'inurl:security-policy.txt ext:txt', reward: false },
+            { query: 'site:*.*.* inurl:bug inurl:bounty', reward: true },
+            { query: 'site:help.*.* inurl:bounty', reward: true },
+            { query: 'site:support.*.* intext:security report reward', reward: true },
+            { query: 'intext:security report monetary inurl:security', reward: true },
+            { query: 'intext:security report reward inurl:report', reward: true },
+            { query: 'site:security.*.* inurl:bounty', reward: true },
+            { query: 'site:*.*.de inurl:bug inurl:bounty', reward: true },
+            { query: 'site:*.*.uk intext:security report reward', reward: true },
+            { query: 'site:*.*.cn intext:security report reward', reward: true },
+            { query: '"vulnerability reporting policy"', reward: false },
+            { query: 'inurl:responsible-disclosure-policy', reward: false },
+            { query: '"If you believe you\'ve found a security vulnerability"', reward: false },
+            { query: 'intext:"BugBounty" intext:"BTC" intext:"reward"', reward: true },
+            { query: 'intext:bounty inurl:/security', reward: true },
+            { query: 'inurl:"bug bounty" intext:"€" inurl:/security', reward: true },
+            { query: 'inurl:"bug bounty" intext:"$" inurl:/security', reward: true },
+            { query: 'inurl:"bug bounty" intext:"INR" inurl:/security', reward: true },
+            { query: 'inurl:/security.txt "mailto*" -github.com -wikipedia.org -portswigger.net -magento', reward: false },
+            { query: '/trust/report-a-vulnerability', reward: false },
+            { query: 'site:*.edu intext:security report vulnerability', reward: false },
+            { query: '"If you find a security issue" "reward"', reward: true },
+            { query: '"responsible disclosure" intext:"you may be eligible for monetary compensation"', reward: true },
+            { query: 'intext:we offer a bounty', reward: true },
+            { query: 'site:*.br responsible disclosure', reward: false },
+            { query: 'site:*.at responsible disclosure', reward: false },
+            { query: 'site:*.be responsible disclosure', reward: false },
+            { query: 'site:*.au responsible disclosure', reward: false },
+            { query: 'site:*/security.txt "bounty"', reward: true },
+            { query: 'inurl:bug bounty intext:"rupees"', reward: true },
+            { query: 'inurl:bug bounty intext:"₹"', reward: true },
+            { query: 'inurl:responsible disclosure intext:"INR"', reward: true },
+            { query: '"vulnerability disclosure program" (bounty OR reward OR swag OR "hall of fame")', reward: true },
+            { query: '"responsible disclosure" (monetary OR cash OR "gift card" OR crypto OR BTC)', reward: true },
+            { query: '"security@*" ("bug bounty" OR "vulnerability disclosure") ext:txt', reward: false },
+            { query: '"powered by yeswehack" OR "powered by federacy" OR "powered by intigriti" -site:yeswehack.com -site:federacy.com -site:intigriti.com', reward: false },
+            { query: '"submit vulnerability report" -site:hackerone.com -site:bugcrowd.com -site:synack.com -site:openbugbounty.org', reward: false },
+            { query: 'inurl:/.well-known/security.txt intext:bounty -hackerone -bugcrowd -synack', reward: true },
+            { query: '"security.txt" ("mailto" OR "contact") (bounty OR reward)', reward: true },
+            { query: 'intitle:"Bug Bounty" OR intitle:"Vulnerability Disclosure" OR intitle:"Security Rewards"', reward: true },
+            { query: '"We value security researchers" OR "We appreciate security reports" (reward OR bounty)', reward: true },
+            { query: '"If you discover a vulnerability" (swag OR "hall of fame" OR monetary)', reward: true },
+            { query: 'site:*.ca intext:"responsible disclosure" intext:reward', reward: true },
+            { query: 'site:*.jp intext:"vulnerability report" intext:swag', reward: true },
+            { query: 'site:*.it intext:"bug bounty" OR intext:"security reward"', reward: true },
+            { query: 'site:*.ch filetype:txt inurl:security intext:bounty', reward: true },
+            { query: 'site:*.se intext:"responsible disclosure" intext:hall_of_fame', reward: true },
+            { query: 'site:*.fr intext:"bug bounty" OR "prime de sécurité"', reward: true },
+            { query: 'site:*.es inurl:/seguridad intext:recompensa', reward: true },
+            { query: 'site:*.edu "responsible disclosure" (reward OR swag OR bounty)', reward: true },
+            { query: 'site:*.edu inurl:/security intext:"report a vulnerability"', reward: false },
+            { query: 'site:*.edu intext:"we run a bug bounty program"', reward: true },
+            { query: 'site:*.edu intext:"vulnerability disclosure policy" intext:hall_of_fame', reward: true },
+            { query: 'site:*.gov* "vulnerability disclosure program" OR "bug bounty"', reward: false },
+            { query: 'site:*.gov* inurl:/security intext:contact intext:reward', reward: true },
+            { query: 'inurl:/hackerone.yml -site:hackerone.com', reward: false },
+            { query: 'inurl:/bug-bounty.json | inurl:/vdp.json', reward: false },
+            { query: 'intext:"Powered by Bug Bounty HQ" OR "Powered by disclose.io"', reward: false },
+            { query: 'intext:"managed by huntr.dev"', reward: false },
+            { query: 'intext:"CVSS score" "eligible for a reward" -hackerone -bugcrowd', reward: true },
+            { query: 'inurl:/security/index.html intext:bounty', reward: true },
+            { query: 'inurl:/legal/security intext:monetary', reward: true },
+            { query: '"security.txt" "PGP" (bounty OR reward)', reward: true },
+            { query: 'inurl:/vulnerability-disclosure reward', reward: true },
+            { query: 'inurl:/security-hall-of-fame', reward: true },
+            { query: '"coordinated disclosure" bounty', reward: true },
+            { query: 'intext:"vulnerability rewards program"', reward: true },
+            { query: '"security researcher" compensation', reward: true },
+            { query: 'inurl:/security-rewards', reward: true }
+        ];
+
+        // Search engines with their URL patterns
+        const searchEngines = [
+            {
+                name: 'Google',
+                icon: '🔎',
+                url: (query) => `https://www.google.com/search?q=${encodeURIComponent(query)}&tbs=qdr:m`
+            },
+            {
+                name: 'DuckDuckGo',
+                icon: '🦆',
+                url: (query) => `https://duckduckgo.com/?q=${encodeURIComponent(query)}&df=m&ia=web`
+            },
+            {
+                name: 'Bing',
+                icon: '🅱️',
+                url: (query) => `https://www.bing.com/search?q=${encodeURIComponent(query)}&filters=ex1:"ez1"`
+            },
+            {
+                name: 'Yahoo',
+                icon: '🟣',
+                url: (query) => `https://search.yahoo.com/search?p=${encodeURIComponent(query)}&age=1m`
+            },
+            {
+                name: 'Brave',
+                icon: '🦁',
+                url: (query) => `https://search.brave.com/search?q=${encodeURIComponent(query)}&tf=pm`
+            },
+            {
+                name: 'Yandex',
+                icon: '🔴',
+                url: (query) => `https://yandex.com/search/?text=${encodeURIComponent(query)}&within=777`
+            },
+            {
+                name: 'Ecosia',
+                icon: '🌱',
+                url: (query) => `https://www.ecosia.org/search?q=${encodeURIComponent(query)}&tbs=qdr:m`
+            },
+            {
+                name: 'Startpage',
+                icon: '🔒',
+                url: (query) => `https://www.startpage.com/do/search?q=${encodeURIComponent(query)}&with_date=m`
+            }
+        ];
+
+        // Selected search engine (stored in memory)
+        let selectedEngine = null;
+
+        // Combined dorks (default + custom)
+        let dorks = [];
+        let editingDorkIndex = null;
+
+        // Load custom dorks from localStorage
+        function getCustomDorks() {
+            const saved = localStorage.getItem('customDorks');
+            return saved ? JSON.parse(saved) : [];
+        }
+
+        // Save custom dorks to localStorage
+        function saveCustomDorks(customDorks) {
+            localStorage.setItem('customDorks', JSON.stringify(customDorks));
+        }
+
+        // Initialize dorks (combine default + custom)
+        function initializeDorks() {
+            const customDorks = getCustomDorks();
+            dorks = [...defaultDorks, ...customDorks.map(d => ({ ...d, custom: true }))];
+        }
+
+        // Get exclusion string for current search engine
+        function getExclusionString() {
+            if (!selectedEngine) return '';
+
+            const exclusions = getExclusionsForEngine(selectedEngine.name);
+            return exclusions.map(site => `-${site.trim()}`).filter(s => s.length > 1).join(' ');
+        }
+
+        // Get exclusions for specific search engine
+        function getExclusionsForEngine(engineName) {
+            const saved = localStorage.getItem(`exclusions_${engineName}`);
+            if (saved) {
+                return saved.split('\n').filter(line => line.trim().length > 0);
+            }
+            return defaultExclusions;
+        }
+
+        // Save exclusions for current search engine
+        function saveExclusions() {
+            if (!selectedEngine) {
+                alert('Please select a search engine first!');
+                return;
+            }
+
+            const textarea = document.getElementById('exclusionInput');
+            const exclusions = textarea.value;
+
+            localStorage.setItem(`exclusions_${selectedEngine.name}`, exclusions);
+
+            updateExclusionPreview();
+
+            // Show success message
+            const preview = document.getElementById('exclusionPreview');
+            preview.innerHTML = `<strong>✅ Saved successfully for ${selectedEngine.name}!</strong><br>${getExclusionPreviewText()}`;
+
+            setTimeout(() => {
+                updateExclusionPreview();
+            }, 2000);
+        }
+
+        // Load default exclusions
+        function loadDefaultExclusions() {
+            const textarea = document.getElementById('exclusionInput');
+            textarea.value = defaultExclusions.join('\n');
+            updateExclusionPreview();
+        }
+
+        // Clear all exclusions
+        function clearExclusions() {
+            if (confirm('Are you sure you want to clear all exclusions? This will remove them from the search query.')) {
+                const textarea = document.getElementById('exclusionInput');
+                textarea.value = '';
+                updateExclusionPreview();
+            }
+        }
+
+        // Load exclusions for selected engine
+        function loadExclusionsForEngine() {
+            if (!selectedEngine) return;
+
+            const textarea = document.getElementById('exclusionInput');
+            const exclusions = getExclusionsForEngine(selectedEngine.name);
+            textarea.value = exclusions.join('\n');
+
+            // Update engine indicator
+            const indicator = document.getElementById('engineIndicator');
+            indicator.innerHTML = `Editing exclusions for: <span>${selectedEngine.icon} ${selectedEngine.name}</span>`;
+
+            updateExclusionPreview();
+        }
+
+        // Update exclusion preview
+        function updateExclusionPreview() {
+            const preview = document.getElementById('exclusionPreview');
+            preview.innerHTML = getExclusionPreviewText();
+        }
+
+        // Get preview text
+        function getExclusionPreviewText() {
+            const textarea = document.getElementById('exclusionInput');
+            const lines = textarea.value.split('\n').filter(line => line.trim().length > 0);
+            const count = lines.length;
+            const formatted = lines.map(site => `-${site.trim()}`).join(' ');
+            const charCount = formatted.length;
+
+            if (count === 0) {
+                return '<strong>⚠️ No exclusions set.</strong> All sites will be included in search results.';
+            }
+
+            const warningClass = charCount > 200 ? ' warning' : '';
+            const warningMsg = charCount > 200 ? ' ⚠️ Long exclusion list may cause issues with some search engines.' : '';
+
+            return `<strong>Preview (${count} domains):</strong>${warningMsg}<br><code>${formatted}</code><div class="char-count${warningClass}">Character count: ${charCount}${charCount > 200 ? ' (consider reducing for better compatibility)' : ''}</div>`;
+        }
+
+        // Initialize search engines
+        function initSearchEngines() {
+            const container = document.getElementById('searchEngines');
+            const savedEngine = localStorage.getItem('selectedEngine');
+
+            searchEngines.forEach((engine, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'search-engine-btn';
+                btn.innerHTML = `${engine.icon} ${engine.name}`;
+                btn.dataset.index = index;
+                btn.onclick = () => selectEngine(index);
+                container.appendChild(btn);
+
+                // Restore saved selection
+                if (savedEngine && savedEngine === engine.name) {
+                    selectEngine(index, false);
+                }
+            });
+        }
+
+        // Select search engine
+        function selectEngine(index, save = true) {
+            // Remove active class from all buttons
+            document.querySelectorAll('.search-engine-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Add active class to selected button
+            const btn = document.querySelector(`.search-engine-btn[data-index="${index}"]`);
+            btn.classList.add('active');
+
+            // Store selected engine
+            selectedEngine = searchEngines[index];
+
+            // Load exclusions for this engine
+            loadExclusionsForEngine();
+
+            // Save to localStorage
+            if (save) {
+                localStorage.setItem('selectedEngine', selectedEngine.name);
+            }
+        }
+
+        // Open modal to add new dork
+        function openAddDorkModal() {
+            editingDorkIndex = null;
+            document.getElementById('modalHeader').textContent = 'Add New Dork';
+            document.getElementById('modalDorkQuery').value = '';
+            document.getElementById('dorkModal').classList.add('active');
+            document.getElementById('modalDorkQuery').focus();
+        }
+
+        // Open modal to edit existing dork
+        function openEditDorkModal(index) {
+            editingDorkIndex = index;
+            document.getElementById('modalHeader').textContent = 'Edit Dork';
+            document.getElementById('modalDorkQuery').value = dorks[index].query;
+            document.getElementById('dorkModal').classList.add('active');
+            document.getElementById('modalDorkQuery').focus();
+        }
+
+        // Close modal
+        function closeDorkModal() {
+            document.getElementById('dorkModal').classList.remove('active');
+            editingDorkIndex = null;
+        }
+
+        // Save dork (add or edit)
+        function saveDork() {
+            const query = document.getElementById('modalDorkQuery').value.trim();
+
+            if (!query) {
+                alert('Please enter a dork query!');
+                return;
+            }
+
+            if (editingDorkIndex !== null) {
+                // Edit existing dork
+                const dork = dorks[editingDorkIndex];
+
+                if (dork.custom) {
+                    // Update custom dork in localStorage
+                    const customDorks = getCustomDorks();
+                    const customIndex = customDorks.findIndex(d => d.query === dork.query);
+                    if (customIndex !== -1) {
+                        customDorks[customIndex].query = query;
+                        saveCustomDorks(customDorks);
+                    }
+                } else {
+                    // Convert default dork to custom dork
+                    const customDorks = getCustomDorks();
+                    customDorks.push({ query: query, reward: dork.reward, custom: true });
+                    saveCustomDorks(customDorks);
+
+                    // Remove from display (will be replaced by custom version)
+                    dorks.splice(editingDorkIndex, 1);
+                }
+
+                // Update the dork in the array
+                dorks[editingDorkIndex].query = query;
+                dorks[editingDorkIndex].custom = true;
+            } else {
+                // Add new dork
+                const customDorks = getCustomDorks();
+                customDorks.push({ query: query, reward: true });
+                saveCustomDorks(customDorks);
+
+                // Add to dorks array
+                dorks.push({ query: query, reward: true, custom: true });
+            }
+
+            closeDorkModal();
+            renderDorks();
+        }
+
+        // Delete dork
+        function deleteDork(index) {
+            const dork = dorks[index];
+
+            if (!dork.custom && !confirm('This is a default dork. Are you sure you want to delete it? (It will be restored on page refresh)')) {
+                return;
+            }
+
+            if (dork.custom && !confirm(`Are you sure you want to delete this dork?\n\n"${dork.query}"`)) {
+                return;
+            }
+
+            if (dork.custom) {
+                // Remove from custom dorks in localStorage
+                const customDorks = getCustomDorks();
+                const customIndex = customDorks.findIndex(d => d.query === dork.query);
+                if (customIndex !== -1) {
+                    customDorks.splice(customIndex, 1);
+                    saveCustomDorks(customDorks);
+                }
+            }
+
+            // Remove from used dorks set
+            usedDorks.delete(index);
+
+            // Update indices in usedDorks set for dorks after the deleted one
+            const newUsedDorks = new Set();
+            usedDorks.forEach(i => {
+                if (i < index) {
+                    newUsedDorks.add(i);
+                } else if (i > index) {
+                    newUsedDorks.add(i - 1);
+                }
+            });
+            usedDorks.clear();
+            newUsedDorks.forEach(i => usedDorks.add(i));
+
+            // Remove from dorks array
+            dorks.splice(index, 1);
+
+            renderDorks();
+        }
+
+        // Initialize dork list
+        function initDorkList() {
+            renderDorks();
+        }
+
+        // Track used dorks
+        const usedDorks = new Set();
+
+        // Render dorks
+        function renderDorks(filter = '') {
+            const container = document.getElementById('dorkList');
+            container.innerHTML = '';
+
+            const filteredDorks = filter
+                ? dorks.filter(d => d.query.toLowerCase().includes(filter.toLowerCase()))
+                : dorks;
+
+            filteredDorks.forEach((dork, filteredIndex) => {
+                const actualIndex = dorks.indexOf(dork);
+
+                const item = document.createElement('div');
+                item.className = 'dork-item';
+                if (dork.custom) item.classList.add('custom');
+                if (usedDorks.has(actualIndex)) item.classList.add('used');
+                item.dataset.index = actualIndex;
+
+                const text = document.createElement('div');
+                text.className = 'dork-text';
+                text.textContent = dork.query;
+
+                // Add action buttons
+                const actions = document.createElement('div');
+                actions.className = 'dork-actions';
+
+                const editBtn = document.createElement('button');
+                editBtn.className = 'dork-action-btn edit';
+                editBtn.textContent = 'Edit';
+                editBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    openEditDorkModal(actualIndex);
+                };
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'dork-action-btn delete';
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    deleteDork(actualIndex);
+                };
+
+                actions.appendChild(editBtn);
+
+                // Only show delete for custom dorks or allow delete for all
+                actions.appendChild(deleteBtn);
+
+                item.appendChild(text);
+                item.appendChild(actions);
+                item.onclick = () => searchDork(actualIndex);
+                container.appendChild(item);
+            });
+
+            updateStats();
+        }
+
+        // Filter dorks based on search input
+        function filterDorks() {
+            const searchInput = document.getElementById('searchDorkInput');
+            renderDorks(searchInput.value);
+        }
+
+        // Search single dork
+        function searchDork(index) {
+            if (!selectedEngine) {
+                alert('Please select a search engine first!');
+                return;
+            }
+
+            const fullQuery = `${dorks[index].query} ${getExclusionString()}`;
+            const searchUrl = selectedEngine.url(fullQuery);
+
+            // Open in new tab
+            window.open(searchUrl, '_blank');
+
+            // Mark as used
+            usedDorks.add(index);
+            const dorkItem = document.querySelector(`.dork-item[data-index="${index}"]`);
+            if (dorkItem) {
+                dorkItem.classList.add('used');
+            }
+        }
+
+        // Initialize exclusion form
+        function initExclusionForm() {
+            const textarea = document.getElementById('exclusionInput');
+
+            // Add event listener for live preview
+            textarea.addEventListener('input', updateExclusionPreview);
+
+            // Load default exclusions on first load
+            if (!selectedEngine) {
+                textarea.value = defaultExclusions.join('\n');
+            }
+
+            updateExclusionPreview();
+        }
+
+        // Update stats
+        function updateStats() {
+            const dorkItems = document.querySelectorAll('.dork-item');
+            const searched = Array.from(dorkItems).filter(item => item.classList.contains('used')).length;
+            const customCount = dorks.filter(d => d.custom).length;
+            const statsContainer = document.getElementById('stats');
+
+            statsContainer.innerHTML = `
+                <div class="stat-item">
+                    <span>📊 Total Dorks:</span>
+                    <span>${dorks.length}</span>
+                </div>
+                <div class="stat-item">
+                    <span>★ Custom:</span>
+                    <span>${customCount}</span>
+                </div>
+                <div class="stat-item">
+                    <span>✓ Searched:</span>
+                    <span>${searched}</span>
+                </div>
+                <div class="stat-item">
+                    <span>📝 Remaining:</span>
+                    <span>${dorks.length - searched}</span>
+                </div>
+            `;
+        }
+
+        // Initialize everything on load
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeDorks();
+            initSearchEngines();
+            initDorkList();
+            initExclusionForm();
+        });
+
+        // Keyboard shortcuts for modal
+        document.addEventListener('keydown', (e) => {
+            const modal = document.getElementById('dorkModal');
+            if (modal.classList.contains('active')) {
+                if (e.key === 'Escape') {
+                    closeDorkModal();
+                } else if (e.key === 'Enter') {
+                    saveDork();
+                }
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('dorkModal').addEventListener('click', (e) => {
+            if (e.target.id === 'dorkModal') {
+                closeDorkModal();
+            }
+        });
+    </script>
+</body>
+</html>
