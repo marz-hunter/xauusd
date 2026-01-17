@@ -89,6 +89,7 @@
             border: 1px solid rgba(79, 195, 220, 0.2);
             position: relative;
             overflow: hidden;
+            animation: fadeIn 0.6s ease-out;
         }
 
         .widget-wrapper::before {
@@ -140,7 +141,44 @@
             min-height: 450px;
         }
 
-        /* Responsive adjustments */
+        .widget-chart {
+            height: 600px;
+        }
+
+        .widget-chart .tradingview-widget-container {
+            height: 100%;
+            width: 100%;
+        }
+
+        .section-separator {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(79, 195, 220, 0.5), transparent);
+            margin: 40px 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1f2e;
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #4fc3dc, #667eea);
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #667eea, #764ba2);
+        }
+
         @media (max-width: 1200px) {
             .widget-large {
                 grid-column: span 1;
@@ -164,42 +202,10 @@
             .widget-wrapper {
                 padding: 15px;
             }
-        }
 
-        /* Loading animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .widget-wrapper {
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 12px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #1a1f2e;
-            border-radius: 6px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #4fc3dc, #667eea);
-            border-radius: 6px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, #667eea, #764ba2);
-        }
-
-        /* Separator */
-        .section-separator {
-            height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(79, 195, 220, 0.5), transparent);
-            margin: 40px 0;
+            .widget-chart {
+                height: 400px;
+            }
         }
     </style>
 </head>
@@ -216,36 +222,82 @@
                 <!-- Market Tickers Widget -->
                 <div class="widget-wrapper widget-full">
                     <h2 class="widget-title">
-                        <span class="widget-icon">📈</span>
+                        <span class="widget-icon">ðŸ“ˆ</span>
                         Market Overview - Live Tickers
                     </h2>
                     <!-- TradingView Widget BEGIN -->
                     <div class="tradingview-widget-container">
-                      <div class="tradingview-widget-container__widget"></div>
-                      <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
-                      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js" async>
-                      {
-                      "symbols": [
+                        <div class="tradingview-widget-container__widget"></div>
+                        <div class="tradingview-widget-copyright">
+                            <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank">
+                                <span class="blue-text">Track all markets on TradingView</span>
+                            </a>
+                        </div>
+                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js" async>
                         {
-                          "proName": "OANDA:XAUUSD",
-                          "title": "XAUUSD"
-                        },
-                        {
-                          "proName": "OKX:BTCUSD",
-                          "title": "BTCUSD"
-                        },
-                        {
-                          "proName": "CAPITALCOM:DXY",
-                          "title": "DXY"
+                            "symbols": [
+                                {"proName": "OANDA:XAUUSD", "title": "XAUUSD"},
+                                {"proName": "OKX:BTCUSD", "title": "BTCUSD"},
+                                {"proName": "CAPITALCOM:DXY", "title": "DXY"}
+                            ],
+                            "colorTheme": "dark",
+                            "locale": "en",
+                            "largeChartUrl": "",
+                            "isTransparent": false,
+                            "showSymbolLogo": true
                         }
-                      ],
-                      "colorTheme": "dark",
-                      "locale": "en",
-                      "largeChartUrl": "",
-                      "isTransparent": false,
-                      "showSymbolLogo": true
-                    }
-                      </script>
+                        </script>
+                    </div>
+                    <!-- TradingView Widget END -->
+                </div>
+            </div>
+        </div>
+
+        <div class="section-separator"></div>
+
+        <!-- XAU/USD Advanced Chart Section -->
+        <div class="widget-section">
+            <div class="widget-grid">
+                <div class="widget-wrapper widget-full widget-chart">
+                    <h2 class="widget-title">
+                        <span class="widget-icon">ðŸ†</span>
+                        XAU/USD Advanced Chart
+                    </h2>
+                    <!-- TradingView Widget BEGIN -->
+                    <div class="tradingview-widget-container" style="height:calc(100% - 60px);width:100%">
+                        <div class="tradingview-widget-container__widget" style="height:calc(100% - 32px);width:100%"></div>
+                        <div class="tradingview-widget-copyright">
+                            <a href="https://www.tradingview.com/symbols/OANDA-XAUUSD/" rel="noopener nofollow" target="_blank">
+                                <span class="blue-text">XAU/USD chart</span>
+                            </a>
+                            <span class="trademark"> by TradingView</span>
+                        </div>
+                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+                        {
+                            "symbol": "OANDA:XAUUSD",
+                            "allow_symbol_change": true,
+                            "calendar": false,
+                            "details": false,
+                            "hide_side_toolbar": true,
+                            "hide_top_toolbar": false,
+                            "hide_legend": false,
+                            "hide_volume": false,
+                            "hotlist": false,
+                            "interval": "240",
+                            "locale": "en",
+                            "save_image": true,
+                            "style": "1",
+                            "theme": "dark",
+                            "timezone": "Etc/UTC",
+                            "backgroundColor": "#0F0F0F",
+                            "gridColor": "rgba(242, 242, 242, 0.06)",
+                            "watchlist": [],
+                            "withdateranges": false,
+                            "compareSymbols": [],
+                            "studies": [],
+                            "autosize": true
+                        }
+                        </script>
                     </div>
                     <!-- TradingView Widget END -->
                 </div>
@@ -260,56 +312,64 @@
                 <!-- DXY Widget -->
                 <div class="widget-wrapper">
                     <h2 class="widget-title">
-                        <span class="widget-icon">💵</span>
+                        <span class="widget-icon">ðŸ’µ</span>
                         DXY (Dollar Index) Analysis
                     </h2>
                     <!-- TradingView Widget BEGIN -->
                     <div class="tradingview-widget-container">
-                      <div class="tradingview-widget-container__widget"></div>
-                      <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
-                      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js" async>
-                      {
-  "colorTheme": "dark",
-  "displayMode": "multiple",
-  "isTransparent": false,
-  "locale": "en",
-  "interval": "1m",
-  "disableInterval": false,
-  "largeChartUrl": "https://www.tradingview.com/symbols/TVC-DXY",
-  "width": 425,
-  "height": 450,
-  "symbol": "TVC:DXY",
-  "showIntervalTabs": true
-                    }
-                      </script>
+                        <div class="tradingview-widget-container__widget"></div>
+                        <div class="tradingview-widget-copyright">
+                            <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank">
+                                <span class="blue-text">Track all markets on TradingView</span>
+                            </a>
+                        </div>
+                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js" async>
+                        {
+                            "colorTheme": "dark",
+                            "displayMode": "multiple",
+                            "isTransparent": false,
+                            "locale": "en",
+                            "interval": "1m",
+                            "disableInterval": false,
+                            "largeChartUrl": "https://www.tradingview.com/symbols/TVC-DXY",
+                            "width": 425,
+                            "height": 450,
+                            "symbol": "TVC:DXY",
+                            "showIntervalTabs": true
+                        }
+                        </script>
                     </div>
                     <!-- TradingView Widget END -->
                 </div>
 
-                <!-- XAU/USD Widget -->
+                <!-- XAU/USD Technical Analysis Widget -->
                 <div class="widget-wrapper">
                     <h2 class="widget-title">
-                        <span class="widget-icon">🏆</span>
+                        <span class="widget-icon">ðŸ†</span>
                         XAU/USD (Gold) Analysis
                     </h2>
                     <!-- TradingView Widget BEGIN -->
                     <div class="tradingview-widget-container">
-                      <div class="tradingview-widget-container__widget"></div>
-                      <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
-                      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js" async>
-                      {
-                      "colorTheme": "dark",
-                      "displayMode": "multiple",
-                      "isTransparent": false,
-                      "locale": "en",
-                      "interval": "1m",
-                      "disableInterval": false,
-                      "width": 425,
-                      "height": 450,
-                      "symbol": "OANDA:XAUUSD",
-                      "showIntervalTabs": true
-                    }
-                      </script>
+                        <div class="tradingview-widget-container__widget"></div>
+                        <div class="tradingview-widget-copyright">
+                            <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank">
+                                <span class="blue-text">Track all markets on TradingView</span>
+                            </a>
+                        </div>
+                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js" async>
+                        {
+                            "colorTheme": "dark",
+                            "displayMode": "multiple",
+                            "isTransparent": false,
+                            "locale": "en",
+                            "interval": "1m",
+                            "disableInterval": false,
+                            "width": 425,
+                            "height": 450,
+                            "symbol": "OANDA:XAUUSD",
+                            "showIntervalTabs": true
+                        }
+                        </script>
                     </div>
                     <!-- TradingView Widget END -->
                 </div>
@@ -317,24 +377,28 @@
                 <!-- Economic Events Widget -->
                 <div class="widget-wrapper">
                     <h2 class="widget-title">
-                        <span class="widget-icon">🌍</span>
+                        <span class="widget-icon">ðŸŒ</span>
                         Economic Events Calendar
                     </h2>
                     <!-- TradingView Widget BEGIN -->
                     <div class="tradingview-widget-container">
-                      <div class="tradingview-widget-container__widget"></div>
-                      <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
-                      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
-                      {
-                      "colorTheme": "dark",
-                      "isTransparent": false,
-                      "locale": "en",
-                      "countryFilter": "ar,au,br,ca,cn,fr,de,in,id,it,jp,kr,mx,ru,sa,za,tr,gb,us,eu",
-                      "importanceFilter": "-1,0,1",
-                      "width": 400,
-                      "height": 550
-                    }
-                      </script>
+                        <div class="tradingview-widget-container__widget"></div>
+                        <div class="tradingview-widget-copyright">
+                            <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank">
+                                <span class="blue-text">Track all markets on TradingView</span>
+                            </a>
+                        </div>
+                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
+                        {
+                            "colorTheme": "dark",
+                            "isTransparent": false,
+                            "locale": "en",
+                            "countryFilter": "ar,au,br,ca,cn,fr,de,in,id,it,jp,kr,mx,ru,sa,za,tr,gb,us,eu",
+                            "importanceFilter": "-1,0,1",
+                            "width": 400,
+                            "height": 550
+                        }
+                        </script>
                     </div>
                     <!-- TradingView Widget END -->
                 </div>
@@ -342,24 +406,28 @@
                 <!-- Market News Timeline -->
                 <div class="widget-wrapper">
                     <h2 class="widget-title">
-                        <span class="widget-icon">📰</span>
+                        <span class="widget-icon">ðŸ“°</span>
                         Market News Timeline
                     </h2>
                     <!-- TradingView Widget BEGIN -->
                     <div class="tradingview-widget-container">
-                      <div class="tradingview-widget-container__widget"></div>
-                      <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
-                      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
-                      {
-                      "displayMode": "regular",
-                      "feedMode": "all_symbols",
-                      "colorTheme": "dark",
-                      "isTransparent": false,
-                      "locale": "en",
-                      "width": 400,
-                      "height": 550
-                    }
-                      </script>
+                        <div class="tradingview-widget-container__widget"></div>
+                        <div class="tradingview-widget-copyright">
+                            <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank">
+                                <span class="blue-text">Track all markets on TradingView</span>
+                            </a>
+                        </div>
+                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
+                        {
+                            "displayMode": "regular",
+                            "feedMode": "all_symbols",
+                            "colorTheme": "dark",
+                            "isTransparent": false,
+                            "locale": "en",
+                            "width": 400,
+                            "height": 550
+                        }
+                        </script>
                     </div>
                     <!-- TradingView Widget END -->
                 </div>
@@ -374,19 +442,16 @@
                 <!-- FX Outlook Widget -->
                 <div class="widget-wrapper widget-large">
                     <h2 class="widget-title">
-                        <span class="widget-icon">📊</span>
+                        <span class="widget-icon">ðŸ“Š</span>
                         FX Market Outlook
                     </h2>
                     <!-- myfxbook.com outlook widget - Start -->
                     <div>
-                        <script class="powered" type="text/javascript"
-                                src="https://widgets.myfxbook.com/scripts/fxOutlook.js?type=1&symbols=,1,2,3,5,51"></script>
+                        <script class="powered" type="text/javascript" src="https://widgets.myfxbook.com/scripts/fxOutlook.js?type=1&symbols=,1,2,3,5,51"></script>
                     </div>
                     <div style="font-size: 10px">
-                    <a href="https://www.myfxbook.com" title="" class="myfxbookLink" target="_self" rel="noopener">
-                                Powered by Myfxbook.com</a>
-                        </div>
-
+                        <a href="https://www.myfxbook.com" title="" class="myfxbookLink" target="_self" rel="noopener">Powered by Myfxbook.com</a>
+                    </div>
                     <script type="text/javascript">showOutlookWidget()</script>
                     <!-- myfxbook.com outlook widget - End -->
                 </div>
@@ -394,16 +459,15 @@
                 <!-- Heat Map Widget -->
                 <div class="widget-wrapper widget-full">
                     <h2 class="widget-title">
-                        <span class="widget-icon">🔥</span>
+                        <span class="widget-icon">ðŸ”¥</span>
                         Forex Heat Map
                     </h2>
                     <!-- myfxbook.com forexHeatMapWidget - Start -->
                     <div>
                         <iframe src="https://widgets.myfxbook.com/widgets/heat-map.html?symbols=51&type=0" width="100%" height="100%" frameborder="0"></iframe>
-
                     </div>
                     <div style="font-size: 10px">
-                        <a href="https://www.myfxbook.com" title="Myfxbook" class="myfxbookLink" target="_self" rel="noopener">Powered  by Myfxbook.com</a>
+                        <a href="https://www.myfxbook.com" title="Myfxbook" class="myfxbookLink" target="_self" rel="noopener">Powered by Myfxbook.com</a>
                     </div>
                     <!-- myfxbook.com forexHeatMapWidget - End -->
                 </div>
@@ -411,15 +475,18 @@
                 <!-- Economic Calendar -->
                 <div class="widget-wrapper widget-large">
                     <h2 class="widget-title">
-                        <span class="widget-icon">📅</span>
+                        <span class="widget-icon">ðŸ“…</span>
                         Economic Calendar
                     </h2>
                     <!-- myfxbook.com Economic Calendar Widget - Start -->
-                    <iframe src="https://widget.myfxbook.com/widget/calendar.html?lang=id&impacts=2,3&symbols=USD" style="border: 0; width:100%; height:100%;"></iframe><div style="margin-top: 10px;">
-                                <div style="width: fit-content; margin: auto;font-family: roboto,sans-serif!important; font-size: 13px; color: #666666;">
-                                 <a href="https://www.myfxbook.com/forex-economic-calendar?utm_source=widget13&utm_medium=link&utm_campaign=copyright" title="Economic Calendar" class="myfxbookLink" target="_blank" rel="noopener"><b style="color:#666666">Economic Calendar</b></a>
-                                 by Myfxbook.com
-                                </div></div>
+                    <iframe src="https://widget.myfxbook.com/widget/calendar.html?lang=id&impacts=2,3&symbols=USD" style="border: 0; width:100%; height:100%;"></iframe>
+                    <div style="margin-top: 10px;">
+                        <div style="width: fit-content; margin: auto; font-family: roboto,sans-serif!important; font-size: 13px; color: #666666;">
+                            <a href="https://www.myfxbook.com/forex-economic-calendar?utm_source=widget13&utm_medium=link&utm_campaign=copyright" title="Economic Calendar" class="myfxbookLink" target="_blank" rel="noopener">
+                                <b style="color:#666666">Economic Calendar</b>
+                            </a> by Myfxbook.com
+                        </div>
+                    </div>
                     <!-- myfxbook.com Economic Calendar Widget - End -->
                 </div>
             </div>
@@ -433,37 +500,64 @@
                 <!-- Technical Summary -->
                 <div class="widget-wrapper">
                     <h2 class="widget-title">
-                        <span class="widget-icon">📈</span>
+                        <span class="widget-icon">ðŸ“ˆ</span>
                         Technical Summary
                     </h2>
-                    <iframe src="https://ssltsw.investing.com?lang=54&forex=1,2,3,5,7,9,68&commodities=8830,8836,8831,8849,8833,8862,8832&indices=23660,166,172,27,179,53094,170&stocks=345,346,347,348,349,350,352&tabs=1,2,3,4" width="317" height="467"></iframe><div class="poweredBy" style="font-family:arial,helvetica,sans-serif; direction:ltr;"><span style="font-size: 11px;color: #333333;text-decoration: none;">Widget Ringkasan Teknikal Didukung oleh <a href="https://id.investing.com" rel="nofollow" target="_blank" style="font-size: 11px;color: #06529D; font-weight: bold;" class="underline_link">Investing.com Indonesia</a></span></div>
+                    <iframe src="https://ssltsw.investing.com?lang=54&forex=1,2,3,5,7,9,68&commodities=8830,8836,8831,8849,8833,8862,8832&indices=23660,166,172,27,179,53094,170&stocks=345,346,347,348,349,350,352&tabs=1,2,3,4" width="317" height="467"></iframe>
+                    <div class="poweredBy" style="font-family:arial,helvetica,sans-serif; direction:ltr;">
+                        <span style="font-size: 11px; color: #333333; text-decoration: none;">
+                            Widget Ringkasan Teknikal Didukung oleh
+                            <a href="https://id.investing.com" rel="nofollow" target="_blank" style="font-size: 11px; color: #06529D; font-weight: bold;" class="underline_link">Investing.com Indonesia</a>
+                        </span>
+                    </div>
                 </div>
 
                 <!-- Live Currency Rates -->
                 <div class="widget-wrapper">
                     <h2 class="widget-title">
-                        <span class="widget-icon">💱</span>
+                        <span class="widget-icon">ðŸ’±</span>
                         Live Currency Rates
                     </h2>
-                    <iframe src="https://id.widgets.investing.com/live-currency-cross-rates?theme=darkTheme&pairs=1,3,2,4,8,6,68" width="100%" height="100%" frameborder="0" allowtransparency="true" marginwidth="0" marginheight="0"></iframe><div class="poweredBy" style="font-family: Arial, Helvetica, sans-serif;">Didukung Oleh <a href="https://id.investing.com?utm_source=WMT&amp;utm_medium=referral&amp;utm_campaign=LIVE_CURRENCY_X_RATES&amp;utm_content=Footer%20Link" target="_blank" rel="nofollow">Investing.com</a></div>
+                    <iframe src="https://id.widgets.investing.com/live-currency-cross-rates?theme=darkTheme&pairs=1,3,2,4,8,6,68" width="100%" height="100%" frameborder="0" allowtransparency="true" marginwidth="0" marginheight="0"></iframe>
+                    <div class="poweredBy" style="font-family: Arial, Helvetica, sans-serif;">
+                        Didukung Oleh <a href="https://id.investing.com?utm_source=WMT&amp;utm_medium=referral&amp;utm_campaign=LIVE_CURRENCY_X_RATES&amp;utm_content=Footer%20Link" target="_blank" rel="nofollow">Investing.com</a>
+                    </div>
                 </div>
 
                 <!-- Fibonacci Calculator -->
                 <div class="widget-wrapper widget-large">
                     <h2 class="widget-title">
-                        <span class="widget-icon">🧮</span>
+                        <span class="widget-icon">ðŸ§®</span>
                         Fibonacci Calculator
                     </h2>
-                    <iframe frameborder="0" scrolling="auto" height="650" width="545" allowtransparency="true" marginwidth="0" marginheight="0" src="https://ssltools.investing.com/fibonacci-calculator/index.php?force_lang=54"></iframe><br /><div style="width:450"><span style="float:left"><span style="font-size: 11px;color: #333333;text-decoration: none;">Kalkulator Fibonacci ini didukung oleh <a href="https://id.investing.com" rel="nofollow" target="_blank" style="font-size: 11px;color: #06529D; font-weight: bold;" class="underline_link">Investing.com Indonesia</a></span></span></div>
+                    <iframe frameborder="0" scrolling="auto" height="650" width="545" allowtransparency="true" marginwidth="0" marginheight="0" src="https://ssltools.investing.com/fibonacci-calculator/index.php?force_lang=54"></iframe>
+                    <br/>
+                    <div style="width:450">
+                        <span style="float:left">
+                            <span style="font-size: 11px; color: #333333; text-decoration: none;">
+                                Kalkulator Fibonacci ini didukung oleh
+                                <a href="https://id.investing.com" rel="nofollow" target="_blank" style="font-size: 11px; color: #06529D; font-weight: bold;" class="underline_link">Investing.com Indonesia</a>
+                            </span>
+                        </span>
+                    </div>
                 </div>
 
                 <!-- Technical Analysis -->
                 <div class="widget-wrapper">
                     <h2 class="widget-title">
-                        <span class="widget-icon">🎯</span>
+                        <span class="widget-icon">ðŸŽ¯</span>
                         Technical Analysis
                     </h2>
-                    <iframe frameborder="0" scrolling="no" height="253" width="505" allowtransparency="true" marginwidth="0" marginheight="0" src="https://ssltools.investing.com/technical_summary.php?pairs=1,2,5,8,8830&curr-name-color=%230059B0&fields=5m,15m,1h,1d&force_lang=54"></iframe><br /><div style="width:505px;"><span style="float:left"><span style="font-size: 11px;color: #333333;text-decoration: none;">Analisis Teknikal ini didukung oleh <a href="https://id.investing.com" rel="nofollow" target="_blank" style="font-size: 11px;color: #06529D; font-weight: bold;" class="underline_link">Investing.com Indonesia</a></span></span></div>
+                    <iframe frameborder="0" scrolling="no" height="253" width="505" allowtransparency="true" marginwidth="0" marginheight="0" src="https://ssltools.investing.com/technical_summary.php?pairs=1,2,5,8,8830&curr-name-color=%230059B0&fields=5m,15m,1h,1d&force_lang=54"></iframe>
+                    <br/>
+                    <div style="width:505px;">
+                        <span style="float:left">
+                            <span style="font-size: 11px; color: #333333; text-decoration: none;">
+                                Analisis Teknikal ini didukung oleh
+                                <a href="https://id.investing.com" rel="nofollow" target="_blank" style="font-size: 11px; color: #06529D; font-weight: bold;" class="underline_link">Investing.com Indonesia</a>
+                            </span>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
