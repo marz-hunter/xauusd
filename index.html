@@ -289,6 +289,7 @@
                 <a href="#analysis">Analysis</a>
                 <a href="#market">Market</a>
                 <a href="#calendar">Calendar</a>
+                <a href="#tools">Tools</a>
             </nav>
         </div>
     </header>
@@ -419,11 +420,11 @@
                     </div>
                 </div>
 
-                <!-- EUR/USD -->
+                <!-- BTC/USD -->
                 <div class="card">
                     <div class="card-header">
-                        <span>💶</span>
-                        <span class="card-title">EUR/USD</span>
+                        <span>₿</span>
+                        <span class="card-title">BTC/USD</span>
                     </div>
                     <div class="card-body chart-md">
                         <div class="tv-container">
@@ -435,7 +436,7 @@
                                     "width": "100%",
                                     "height": "100%",
                                     "isTransparent": true,
-                                    "symbol": "FX:EURUSD",
+                                    "symbol": "BITSTAMP:BTCUSD",
                                     "showIntervalTabs": true,
                                     "displayMode": "single",
                                     "locale": "en",
@@ -587,7 +588,7 @@
         </section>
 
         <!-- Trading Tools -->
-        <section class="section">
+        <section class="section" id="tools">
             <h2 class="section-title">Trading Tools</h2>
             <div class="grid-2">
                 <!-- Cross Rates -->
@@ -635,6 +636,141 @@
                                     "showToolbar": true,
                                     "colorTheme": "dark",
                                     "locale": "en",
+                                    "isTransparent": true
+                                }
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Investing.com Tools -->
+        <section class="section">
+            <h2 class="section-title">Investing.com Tools</h2>
+            <div class="grid-2">
+                <!-- Fibonacci Calculator -->
+                <div class="card">
+                    <div class="card-header">
+                        <span>🧮</span>
+                        <span class="card-title">Fibonacci Calculator</span>
+                        <span class="card-badge">Tool</span>
+                    </div>
+                    <div class="card-body chart-xl" style="padding: 16px; overflow: auto;">
+                        <iframe frameborder="0" scrolling="auto" width="100%" height="100%" allowtransparency="true" src="https://ssltools.investing.com/fibonacci-calculator/index.php?force_lang=54"></iframe>
+                    </div>
+                </div>
+
+                <!-- Technical Summary -->
+                <div class="card">
+                    <div class="card-header">
+                        <span>📈</span>
+                        <span class="card-title">Technical Summary</span>
+                    </div>
+                    <div class="card-body chart-xl" style="padding: 16px; overflow: auto;">
+                        <iframe src="https://ssltsw.investing.com?lang=54&forex=1,2,3,5,7,9,68&commodities=8830,8836,8831,8849,8833,8862,8832&indices=23660,166,172,27,179,53094,170&stocks=345,346,347,348,349,350,352&tabs=1,2,3,4" width="100%" height="100%" frameborder="0"></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- More Investing.com Widgets -->
+        <section class="section">
+            <h2 class="section-title">Additional Analysis</h2>
+            <div class="grid-2">
+                <!-- Live Currency Rates -->
+                <div class="card">
+                    <div class="card-header">
+                        <span>💹</span>
+                        <span class="card-title">Live Currency Rates</span>
+                    </div>
+                    <div class="card-body chart-lg" style="padding: 0;">
+                        <iframe src="https://id.widgets.investing.com/live-currency-cross-rates?theme=darkTheme&pairs=1,3,2,4,8,6,68" width="100%" height="100%" frameborder="0" allowtransparency="true"></iframe>
+                    </div>
+                </div>
+
+                <!-- Technical Analysis Investing -->
+                <div class="card">
+                    <div class="card-header">
+                        <span>🎯</span>
+                        <span class="card-title">Technical Analysis (Multi-TF)</span>
+                    </div>
+                    <div class="card-body chart-lg" style="padding: 16px; overflow: auto;">
+                        <iframe frameborder="0" scrolling="no" width="100%" height="100%" allowtransparency="true" src="https://ssltools.investing.com/technical_summary.php?pairs=1,2,5,8,8830&curr-name-color=%230059B0&fields=5m,15m,1h,1d&force_lang=54"></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Symbol Info -->
+        <section class="section">
+            <h2 class="section-title">Symbol Information</h2>
+            <div class="grid-3">
+                <!-- XAU/USD Info -->
+                <div class="card">
+                    <div class="card-header">
+                        <span>🏆</span>
+                        <span class="card-title">XAU/USD Info</span>
+                    </div>
+                    <div class="card-body chart-sm">
+                        <div class="tv-container">
+                            <div class="tradingview-widget-container" style="height:100%;width:100%">
+                                <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
+                                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js" async>
+                                {
+                                    "symbol": "OANDA:XAUUSD",
+                                    "width": "100%",
+                                    "locale": "en",
+                                    "colorTheme": "dark",
+                                    "isTransparent": true
+                                }
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DXY Info -->
+                <div class="card">
+                    <div class="card-header">
+                        <span>💵</span>
+                        <span class="card-title">DXY Info</span>
+                    </div>
+                    <div class="card-body chart-sm">
+                        <div class="tv-container">
+                            <div class="tradingview-widget-container" style="height:100%;width:100%">
+                                <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
+                                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js" async>
+                                {
+                                    "symbol": "TVC:DXY",
+                                    "width": "100%",
+                                    "locale": "en",
+                                    "colorTheme": "dark",
+                                    "isTransparent": true
+                                }
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BTC Info -->
+                <div class="card">
+                    <div class="card-header">
+                        <span>₿</span>
+                        <span class="card-title">BTC/USD Info</span>
+                    </div>
+                    <div class="card-body chart-sm">
+                        <div class="tv-container">
+                            <div class="tradingview-widget-container" style="height:100%;width:100%">
+                                <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
+                                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js" async>
+                                {
+                                    "symbol": "BITSTAMP:BTCUSD",
+                                    "width": "100%",
+                                    "locale": "en",
+                                    "colorTheme": "dark",
                                     "isTransparent": true
                                 }
                                 </script>
